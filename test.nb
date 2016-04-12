@@ -1,0 +1,21 @@
+init top
+fact under top
+push :next:
+fact under next
+push :next2:
+fact under next2
+pop
+fact after under next
+pop
+fact after nesting
+ls
+search fact
+search top
+search next
+search next2
+search after under
+search under
+search nesting
+push :next:
+ls
+ls all

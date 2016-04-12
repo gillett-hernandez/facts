@@ -2,12 +2,9 @@
 
 import argparse
 import sys
-# import pickle as pkl
-import json
 import cmd
 import re
-from itertools import flatten
-from io import StringIO
+import readline
 
 
 class Facts:
@@ -81,21 +78,21 @@ def matches(string, regex):
 
 def save_to_file(interpreter, filepath_name):
     """returns None"""
-    with open(filepath_name, "wb") as fd:  # maybe use io.BytesIO
-        pkl.dump(interpreter.root, fd)
-    return
+    with open(filepath_name, "w") as fd:  # maybe use io.BytesIO
+        fd.write(interpreter._hist)
 
 
 def get_from_file(filepath_name):
     """returns a Facts object"""
-    with open(filepath_name, "rb") as fd:  # maybe use io.BytesIO
-        temp_facts = pkl.load(fd)
-    return temp_facts
+    with open(filepath_name, "r") as fd:  # maybe use io.BytesIO
+        facts = fd.read()
+    return facts
 
 
 def get_interpreter_from_file(filepath_name):
     facts = get_from_file(filepath_name)
-    Int = FactInterpreter(facts)
+    Int = FactInterpreter()
+    Int.cmdqueue.extend(facts.splitlines())
     return Int
 
 
@@ -116,6 +113,7 @@ class FactInterpreter(cmd.Cmd):
         self.stack = []
         self.facts = facts
         self.initcalled = False
+        self._hist = []
         if facts is not None:
             self.root = facts
             self.initcalled = True
@@ -223,11 +221,12 @@ class FactInterpreter(cmd.Cmd):
         print("searches all the facts for term(s) and prints their contexts"
               "syntax: search [term]+")
 
-    def do_end_and_save(self,line):
+    def do_end_and_save(self, line):
         save_to_file(line.strip())
         return True
 
     def default(self, line):
+        print(line)
         if not self.initcalled:
             self.initnotcalled()
             return False
@@ -246,36 +245,17 @@ class FactInterpreter(cmd.Cmd):
             globals()['IntFacts'] = top_facts
         return True
 
-    def postloop(self):
-        print()
-        return True
+    def postcmd(self, stop, line):
+        self._hist.append(line)
+        print("postcmd")
+        return stop
 
 
 def test():
-    testinput = """
-init top
-fact under top
-push :next:
-fact under next
-push :next2:
-fact under next2
-pop
-fact after under next
-pop
-fact after nesting
-ls
-search fact
-search top
-search next
-search next2
-search after under
-search under
-search nesting
-push :next:
-ls
-ls all"""
+    with open("test.nb", 'r') as fd:
+        testinput = fd.read().split("\n")
     Int = FactInterpreter()
-    for line in testinput.split("\n"):
+    for line in testinput:
         Int.onecmd(line)
     Int.do_EOF('')
 
@@ -284,29 +264,33 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="record facts by topic.")
     # help(parser)
     parser.add_argument("--test", action="store_true", default=False)
-    parser.add_argument("path", action="store", nargs='?', default=None, type=str, help="directory name to store chapters in")
+    parser.add_argument("path", action="store", nargs='?', default=None, type=str, help="directory name to store notes")
     parser.add_argument("--save-at-end", action="store", nargs='?', const=True, default=False)
     parser.add_argument("--collect", action="append", nargs="*", default='')
-    print(parser.parse_args("/blah --save-at-end /blah2/blah.blah".split(" ")))
+    # print(parser.parse_args("/blah --save-at-end /blah2/blah.blah".split(" ")))
+    print(len(sys.argv))
     args = parser.parse_args(sys.argv[1:])
+    print(args)
     # test()
 
     global Int
     if not args.test:
+        if args.save_at_end and args.path is None:
+            raise parser.error("using --save-at-end requires a path")
+
         if args.path is not None:
             Int = get_interpreter_from_file(args.path)
         else:
             Int = FactInterpreter()
+
         try:
+            print("getting here")
             Int.cmdloop()
         except:
             Int.do_EOF("")
             raise
-        if args.save_at_end is True:
-            if args.path is not None:
-                save_to_file(Int, args.path)
-            else:
-                raise parser.error("using --save-at-end requires a path to save to")
+        if args.save_at_end:
+            save_to_file(Int, args.path)
         elif isinstance(args.save_at_end, str):
             save_to_file(Int, args.save_at_end)
     else:
