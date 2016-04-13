@@ -120,12 +120,25 @@ class FactInterpreter(cmd.Cmd):
 
     def do_init(self, line):
         if not self.initcalled:
-            self.facts = Facts(line)
+            subject, line = parse_subject(line)
+            self.facts = Facts(subject)
             self.root = self.facts
             self.initcalled = True
 
     def initnotcalled(self):
         print("init needs to be called first")
+
+    def do_import(self, line):
+        subject, line = parse_subject(line)
+        before_import = self.facts
+        self.facts.register_subject(subject)
+        self.stack.append(self.facts)
+        self.facts = self.facts.subjects[subject]
+        factstrings = get_from_file(line)
+        for factS in factstrings.splitlines():
+            self.onecmd(factS)
+        self.facts = self.stack.pop()
+        self.facts = before_import
 
     def do_push(self, line):
         if not self.initcalled:
@@ -170,6 +183,9 @@ class FactInterpreter(cmd.Cmd):
 
     def help_pwd(self):
         print("prints out the current context as a topic or chain of topics")
+
+    do_context = do_pwd
+    help_context = help_pwd
 
     def do_swap(self, line):
         if not self.initcalled:
@@ -247,7 +263,7 @@ class FactInterpreter(cmd.Cmd):
 
     def postcmd(self, stop, line):
         self._hist.append(line)
-        print("postcmd")
+        # print("postcmd")
         return stop
 
 

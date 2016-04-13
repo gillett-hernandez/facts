@@ -1,0 +1,42 @@
+%YAML1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - nb
+scope: text.plain
+first_line_match: 'init\b\w+'
+contexts:
+  main:
+    # - include: normal_text
+
+    - match: '\b(init|push|swap|import)\b'
+      scope: keyword.control.nb
+      push: subject_text
+
+    - match: '\b(tag|search|end-and-save)\b'
+      scope: keyword.control.nb
+
+    - match: '\b(pop|root|ls)\b'
+      scope: keyword.control.nb
+
+    - match: '(?=\w)'
+      scope: punctuation.definition.string.begin.nb
+      push: normal_text
+
+    - match: '(?=:)'
+      push: subject_text
+
+  subject_text:
+    - match: '\s?:(.+):\s?'
+      scope: constant.character.nb
+    - match: '(?=\w)'
+      scope: punctuation.definition.string.begin.nb
+      push: normal_text
+      pop: true
+
+  normal_text:
+    - match: '(.*)'
+      scope: string
+    - match: '$'
+      scope: punctuation.definition.string.end.nb
+      pop: true
