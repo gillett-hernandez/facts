@@ -98,10 +98,27 @@ def get_interpreter_from_file(filepath_name):
 
 def parse_subject(line):
     """line should be in form
-:subject: fact words and stuff"""
-    _, subject, fact_words = line.split(":")
-    fact_words = fact_words.strip()
+    (\w+)(\s\w+)+:\s"""
+    _all = line.split(":")
+    command_and_subject, rest = _all[0].split(" "), _all[1:]
+    # python 3 syntax allows the below code
+    subject, fact_words = command_and_subject[1:], rest
+    # python 2 syntax would be:
+    # subject, fact_words = tuple(rest)
+    subject = " ".join(subject)
+    fact_words = "".join(fact_words).strip()
     return subject, fact_words
+
+
+def restricted(f):
+    def F(self, *args, **kwargs):
+        print(self, args, kwargs)
+        if not self.initcalled:
+            self.initnotcalled()
+            return False
+        return f(self, *args, **kwargs)
+    F.__name__ = f.__name__
+    return F
 
 
 class FactInterpreter(cmd.Cmd):
@@ -121,6 +138,7 @@ class FactInterpreter(cmd.Cmd):
     def do_init(self, line):
         if not self.initcalled:
             subject, line = parse_subject(line)
+            print("subject={}, line={}".format(subject, line))
             self.facts = Facts(subject)
             self.root = self.facts
             self.initcalled = True
@@ -128,6 +146,7 @@ class FactInterpreter(cmd.Cmd):
     def initnotcalled(self):
         print("init needs to be called first")
 
+    @restricted
     def do_import(self, line):
         subject, line = parse_subject(line)
         before_import = self.facts
@@ -140,10 +159,8 @@ class FactInterpreter(cmd.Cmd):
         self.facts = self.stack.pop()
         self.facts = before_import
 
+    @restricted
     def do_push(self, line):
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         try:
             subject, line = parse_subject(line)
         except ValueError:
@@ -157,13 +174,14 @@ class FactInterpreter(cmd.Cmd):
             self.default(line)
 
     def help_push(self):
-        print("pushes a new subject onto the input stack"
-              "syntax: push :subject: [fact]")
+        print("pushes a new subject onto the input stack\n"
+              "can be used with a fact after the subject line\n"
+              " which automatically adds that fact to the pushed subject\n"
+              "syntax:\n"
+              "    push subject: [fact]")
 
+    @restricted
     def do_pop(self, line):
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         prev = self.facts.subject
         self.facts = self.stack.pop()
         print("->".join([prev, self.facts.subject]))
@@ -172,10 +190,8 @@ class FactInterpreter(cmd.Cmd):
         print("pops the current subject off of the input stack"
               "syntax: pop")
 
+    @restricted
     def do_pwd(self, line):
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         if len(self.stack) !=0:
             print([f.subject for f in self.stack] + [self.facts.subject])
         else:
@@ -184,18 +200,20 @@ class FactInterpreter(cmd.Cmd):
     def help_pwd(self):
         print("prints out the current context as a topic or chain of topics")
 
-    do_context = do_pwd
+    def do_context(self, *args, **kwargs):
+        self.do_pwd(*args, **kwargs)
     help_context = help_pwd
 
+    @restricted
     def do_swap(self, line):
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         self.do_pop(line)
         self.do_push(line)
 
     def help_swap(self):
-        print("locally swaps topics to a topic of choice")
+        print("locally swaps topics to a topic of choice\n"
+              "equivalent to a pop and then a push\n"
+              "syntax:\n"
+              "    swap subject: fact")
 
     def do_tag(self, line):
         """tags a fact or subject with a searchable term"""
@@ -204,10 +222,8 @@ class FactInterpreter(cmd.Cmd):
     def help_tag(self):
         pass
 
+    @restricted
     def do_root(self, line):
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         self.facts = self.root
         # while len(self.stack) > 1:
         #     self.stack.pop()
@@ -216,16 +232,15 @@ class FactInterpreter(cmd.Cmd):
     def help_root(self):
         print("sets the context to the global topic")
 
+    @restricted
     def do_ls(self, line):
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         if line.strip().startswith("all"):
             print('\n'.join(['\n'.join(ss) for ss in self.root.get_all_strings()]))
         else:
             print([key for key in self.facts.subjects])
             print("\n".join([fact for fact in self.facts.facts]))
 
+    @restricted
     def do_search(self, line):
         if not self.initcalled:
             self.initnotcalled()
@@ -237,15 +252,13 @@ class FactInterpreter(cmd.Cmd):
         print("searches all the facts for term(s) and prints their contexts"
               "syntax: search [term]+")
 
+    @restricted
     def do_end_and_save(self, line):
         save_to_file(line.strip())
         return True
 
+    @restricted
     def default(self, line):
-        print(line)
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         if line.startswith(":"):
             subject, line = parse_subject(line)
             self.facts.register(line, subject)
