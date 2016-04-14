@@ -1,0 +1,112 @@
+init :civil rights and voting rights:
+:lesson question: what were the causes and effects of major civil rights legislation in the 1960s
+:topics: the march on washington -> the civil rights act
+:topics: the selma marches -> the voting rights act
+In the years that followed the Civil War, African Americans struggled to obtain the rights that were granted to them by the US Constitution.
+Social attitudes and barriers did not fall easily.
+And by the 1960s the civil rights movement had reached its climax as African Americans demanded equal rights at the voting polls and elsewhere.
+One of the most important events in the civil rights movement was the march on Washington.
+This is where Dr.
+Martin Luther King gave one of the most influential speeches in history, his "I have a Dream" speech
+push :achievements up to 1963:
+    public school segregation was outlawed, and the process of desegregating public schools and universities was well under way.
+    many public accommodations, such as buses, had been desegregated.
+    Others had been segregated through actions such as sit-ins or the Montgomery bus boycott.
+    Rosa Parks.
+    She was a key figure in Montgomery bus boycott.
+    Many public accommodations, like movie theaters, restaurants, and hotels were still segregated, and there were barriers to voting rights for African Americans that were still in existence.
+    The 24th Amendment, which would outlaw poll taxes, had not yet been ratified.
+swap :march on washington:
+    :date: august 28, 1963
+    push :goals:
+        celebrate the 100-year anniversary of the emancipation proclamation
+        protest racial discrimination and demand legal equality
+        president kennedy -- insist on passage of major civil rights legislation
+        200,000 attendees
+        white and african american supporters
+        it was organized, peaceful, and focused on a clear set of goals
+    swap :historical events:
+        martin luther king jr speech
+        :appeals: to emotions, by his referring to children
+        :appeals: to ethics, by his repeated references to the declaration of independence, the constitution, and the bible
+    swap :impact:
+        watched by millions of americans on television
+        positively influenced national opinion in support of civil rights
+        helped ensure the passage of the civil rights act
+    pop
+swap :civil rights act of 1964:
+    push :reasons:
+        african americans still faced discrimination and segregation
+        laws in southern states ensured ongoing discrimination
+        only federal law could overcome and remove "Jim Crow"
+        but opposition to a federal civil rights act was strong
+    swap :kennedy:
+        JFK proposed the first draft of the civil rights act
+        called for an end to all segregation in public accommodations and more protections for african americans' voting rights.
+        JFK was assassinated and the responsibility was passed on to Lyndon B.
+        Johnson
+    swap :LBJ:
+        became president after kennedy was assassinated
+        urged congress to pass the civil rights act to honor president kennedy's memory
+        became an influential leader with a vision for a "great society"
+    swap :..:
+        the house strengthened kennedy's bill and passed it
+        southern senators tried to prevent a vote through a filibuster
+        push :filibuster:
+            A filibuster occurs when senators who oppose a bill refuse to end the debate and continue making speeches, hoping to prevent a vote on the bill.
+            The side proposing the legislation will often back down, but in this case, supporters were willing to withstand the filibuster for as long as necessary.
+            The filibuster ended after 83 days.
+            And Johnson signed the bill into law on July 2, 1964.
+        swap :provisions:
+            guarantee of equal voting rights
+            "No person acting under color of law shall deny the right of any individual to vote in any Federal election."
+            The Act also put an end to the segregation of public accommodations and an end to gender discrimination in the workplace.
+            Finally, and perhaps most importantly, the Act provided new enforcement tools so laws could be effectively enforced.
+        pop
+    pop
+swap :24th amendment:
+    was also ratified in 1964
+    it banned federal and state governments from requiring poll taxes in federal elections
+    "The right of citizens of the United States to vote shall not be denied or abridged by the United States or any State by reason of failure to pay any poll tax or other tax."
+    In 1966, a Supreme Court ruling prohibited poll taxes in state elections as well.
+swap :voting rights in the south:
+    push :techniques to deny voting rights:
+        poll taxes
+        literacy tests
+        grandfather clauses
+        white primary - where african americans were denied the right to participate in nominating candidates
+        all of these were used to deny voting rights to african americans
+    swap :voter advocacy movement:
+        The Advocacy Movement was the next focus of the Civil Rights Movement.
+        The free exercise of voting rights in the South became the goal of civil rights activists.
+        The activists took action by sponsoring voter registration drives.
+        You can see an example of a voter registration drive in the picture.
+        They also founded organizations like the Mississippi Freedom Democratic Party.
+        But such activity was often met with mob and police violence.
+    swap :selma marches:
+        The Selma march was the next planned demonstration within the Civil Rights Movement.
+        In Alabama, voter registration drives led to white resistance and often violence.
+        In Selma, for example, in spite of strong efforts, only 2% of eligible African Americans were registered to vote.
+        Civil rights leaders responded by planning a 54-mile march from Selma to Montgomery, Alabama.
+        In the picture, you can see Martin Luther King and his wife marching in support of African American suffrage.
+        Selma was important because African Americans made up 50% of the population but only 1% of the registered voters.
+        Civil rights leaders also responded by helping to force Governor Wallace to secure voting rights for African Americans in Alabama.
+        The first march gave rise to two more marches when protesters were met with violence.
+        push :events:
+            :March 7, 1965: marches were attacked by police officers at a Selma bridge
+            :March 9, 1965: king then led a memorial march to the bridge
+            :March 21-25, 1965: about 25000 marchers finally completed the march to montgomery
+        swap :effects:
+            selma marches helped african americans gain voting rights
+            national television coverage created support among the american public
+            congress passed the voting rights act of 1965
+            "It's all of us who must overcome the crippling legacy of bigotry and injustice, and we shall overcome."
+        pop
+    swap :voting rights act of 1965:
+        banned literacy tests
+        required federal supervision of vote registration in select areas
+        "No voting qualification or prerequisite to voting shall be imposed or applied by any state to deny or abridge the right of any citizen of the United States to vote on account of race or color."
+        in 1965, african american voter registration was lower than white registration, but as African American registration increased, so did the number of African Americans elected.
+        by 2010, that difference in voter registration rates had almost completely disappeared
+    pop
+pop
