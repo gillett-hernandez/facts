@@ -5,7 +5,7 @@ import sys
 import cmd
 import re
 import readline
-
+import pprint
 
 class Facts:
     def __init__(self, subject):
@@ -98,21 +98,21 @@ def get_interpreter_from_file(filepath_name):
 
 def parse_subject(line):
     """line should be in form
-    (\w+)(\s\w+)+:\s"""
+    :?(\w+)(\s\w+)*:\s"""
     _all = line.split(":")
-    command_and_subject, rest = _all[0].split(" "), _all[1:]
+    # print(_all)
+    subject, rest = _all[0], _all[1:]
     # python 3 syntax allows the below code
-    subject, fact_words = command_and_subject[1:], rest
+    fact_words = rest
     # python 2 syntax would be:
     # subject, fact_words = tuple(rest)
-    subject = " ".join(subject)
-    fact_words = "".join(fact_words).strip()
+    fact_words = " ".join(rest).strip()
     return subject, fact_words
 
 
 def restricted(f):
     def F(self, *args, **kwargs):
-        print(self, args, kwargs)
+        # print(self, args, kwargs)
         if not self.initcalled:
             self.initnotcalled()
             return False
@@ -137,8 +137,9 @@ class FactInterpreter(cmd.Cmd):
 
     def do_init(self, line):
         if not self.initcalled:
+            # print("line={}".format(line))
             subject, line = parse_subject(line)
-            print("subject={}, line={}".format(subject, line))
+            # print("subject={}, line={}".format(subject, line))
             self.facts = Facts(subject)
             self.root = self.facts
             self.initcalled = True
@@ -164,7 +165,7 @@ class FactInterpreter(cmd.Cmd):
         try:
             subject, line = parse_subject(line)
         except ValueError:
-            print("SyntaxError: push needs to be followed by the subject surrounded with colons i.e. \"push :subject matter: [fact words]*\"")
+            print("SyntaxError: push needs to be followed by the subject i.e. \"push subject matter: [fact words]*\"")
 
         print("->".join([self.facts.subject, subject]))
         self.facts.register_subject(subject)
@@ -242,11 +243,19 @@ class FactInterpreter(cmd.Cmd):
 
     @restricted
     def do_search(self, line):
-        if not self.initcalled:
-            self.initnotcalled()
-            return False
         # line should just be the search terms
-        print(self.facts.search(line))
+        pprint.pprint(self.facts.search(line))
+
+    @restricted
+    def do_cd(self, line):
+        subjects = [key for key in self.facts.subjects]
+        key = line
+        if key in subjects:
+            self.stack.append(self.facts)
+            self.facts = self.facts.subjects[key]
+        else:
+            if key == "..":
+                self.do_pop()
 
     def help_search(self):
         print("searches all the facts for term(s) and prints their contexts"
@@ -297,9 +306,7 @@ if __name__ == '__main__':
     parser.add_argument("--save-at-end", action="store", nargs='?', const=True, default=False)
     parser.add_argument("--collect", action="append", nargs="*", default='')
     # print(parser.parse_args("/blah --save-at-end /blah2/blah.blah".split(" ")))
-    print(len(sys.argv))
     args = parser.parse_args(sys.argv[1:])
-    print(args)
     # test()
 
     global Int
@@ -313,7 +320,6 @@ if __name__ == '__main__':
             Int = FactInterpreter()
 
         try:
-            print("getting here")
             Int.cmdloop()
         except:
             Int.do_EOF("")
