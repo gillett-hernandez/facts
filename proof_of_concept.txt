@@ -1,0 +1,4 @@
+init top
+push topic {
+    
+}

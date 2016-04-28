@@ -17,6 +17,7 @@ contexts:
       push: subject_text
 
     - match: '\s*\b(push|swap)\b'
+      # any amount of whitespace then the keyword push
       scope: keyword.control.nb
       push: subject_text
 
@@ -24,10 +25,12 @@ contexts:
       scope: keyword.control.nb
 
     - match: '^\s*:'
+      # beginning of line, then any amount of whitespace, then a colon
       scope: constant.character.nb
       push: subject_text
 
     - match: '^\s*[^:]'
+      # beginning of line, then any amount of whitespace, then something thats not a colon
       scope: string
       push: normal_text
 
