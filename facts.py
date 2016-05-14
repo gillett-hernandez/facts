@@ -7,6 +7,7 @@ import re
 import readline
 import pprint
 
+
 class Facts:
     def __init__(self, subject):
         self.subject = subject
@@ -183,6 +184,10 @@ class FactInterpreter(cmd.Cmd):
 
     @restricted
     def do_pop(self, line):
+        if len(self.stack) < 1:
+            print("you cannot")
+            print("there is no topic to pop to")
+            return
         prev = self.facts.subject
         self.facts = self.stack.pop()
         print("->".join([prev, self.facts.subject]))
@@ -244,7 +249,7 @@ class FactInterpreter(cmd.Cmd):
     @restricted
     def do_search(self, line):
         # line should just be the search terms
-        pprint.pprint(self.facts.search(line))
+        pprint.pprint(self.facts.search(line), indent=1, width=400)
 
     @restricted
     def do_cd(self, line):
@@ -302,7 +307,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="record facts by topic.")
     # help(parser)
     parser.add_argument("--test", action="store_true", default=False)
-    parser.add_argument("path", action="store", nargs='?', default=None, type=str, help="directory name to store notes")
+    parser.add_argument("path", action="store", nargs='?', default=None, type=str, help="directory name to grab notes from")
     parser.add_argument("--save-at-end", action="store", nargs='?', const=True, default=False)
     parser.add_argument("--collect", action="append", nargs="*", default='')
     # print(parser.parse_args("/blah --save-at-end /blah2/blah.blah".split(" ")))
